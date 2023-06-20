@@ -7,9 +7,6 @@ importers:
       husky:
         specifier: ^8.0.0
         version: 8.0.0
-      lint-staged:
-        specifier: ^13.2.2
-        version: 13.2.2
 
   apps/backend:
     dependencies:
