@@ -1,5 +1,3 @@
-// TODO: Eslint config doesn't get detected...
-
 module.exports = {
     env: {
         browser: true,
