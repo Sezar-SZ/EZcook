@@ -37,10 +37,13 @@
         "dev": "nodemon -x ts-node src/index.ts",
         "compile": "shx rm -rf lib/ && tsc",
         "start": "node lib/",
-        "prettier": "npx prettier \"**/*.ts\" --write",
+        "prettier": "pnpm exec prettier \"**/*.ts\" --write",
         "mocha": "cross-env NODE_ENV=test mocha test/ --require ts-node/register --recursive --extension .ts --exit",
         "test": "npm run mocha",
-        "bundle:client": "npm run compile && npm pack --pack-destination ./public"
+        "bundle:client": "npm run compile && npm pack --pack-destination ./public",
+        "lint": "pnpm exec eslint --ext .ts .",
+        "lint:fix": "pnpm exec eslint --ext .ts . --fix",
+        "type-check": "pnpm exec tsc --noEmit"
     },
     "dependencies": {
         "@feathersjs/adapter-commons": "5.0.6",
