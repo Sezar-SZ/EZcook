@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "name": "prettier-config",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.cjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/prettier": "^2.7.3"
+  },
+  "dependencies": {
+    "prettier": "^2.8.8"
+  }
+}
