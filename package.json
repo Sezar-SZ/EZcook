@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "prepare": "husky install",
+        "dev": "pnpm run --parallel -r dev",
         "lint": "pnpm run --parallel -r lint",
         "lint:fix": "pnpm run --parallel -r lint:fix",
         "type-check": "pnpm run --parallel -r type-check"
