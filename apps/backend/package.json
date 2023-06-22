@@ -32,7 +32,8 @@
         "prettier-config": "workspace:*",
         "reflect-metadata": "^0.1.13",
         "rxjs": "^7.8.1",
-        "zod": "^3.21.4"
+        "zod": "^3.21.4",
+        "zod-validation-error": "^1.3.1"
     },
     "devDependencies": {
         "@nestjs/cli": "^10.0.0",
@@ -56,7 +57,8 @@
         "ts-loader": "^9.4.3",
         "ts-node": "^10.9.1",
         "tsconfig-paths": "^4.2.0",
-        "typescript": "^5.1.3"
+        "typescript": "^5.1.3",
+        "zod-prisma": "^0.5.4"
     },
     "jest": {
         "moduleFileExtensions": [
