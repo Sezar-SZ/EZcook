@@ -4,12 +4,31 @@ import * as bcrypt from "bcrypt";
 
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateUserDto } from "./dto";
+import { Role } from "@prisma/client";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class UsersService {
-    constructor(private prisma: PrismaService) {}
+    constructor(
+        private prisma: PrismaService,
+        private configService: ConfigService
+    ) {}
 
-    async create(createUserDto: CreateUserDto) {
+    async onModuleInit() {
+        const adminEmail = this.configService.get("ADMIN_EMAIL");
+        const adminPassword = this.configService.get("ADMIN_PASSWORD");
+        try {
+            await this.create(
+                {
+                    email: adminEmail,
+                    password: adminPassword,
+                },
+                "ADMIN"
+            );
+        } catch (error) {}
+    }
+
+    async create(createUserDto: CreateUserDto, role?: Role) {
         const user = await this.prisma.user.findFirst({
             where: { email: createUserDto.email },
         });
@@ -21,8 +40,8 @@ export class UsersService {
         return await this.prisma.user.create({
             data: {
                 email: createUserDto.email,
-                role: createUserDto.role,
                 password: hashedPassword,
+                role: role || "USER",
             },
         });
     }
