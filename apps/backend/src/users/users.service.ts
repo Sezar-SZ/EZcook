@@ -6,6 +6,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { CreateUserDto } from "./dto";
 import { Role } from "@prisma/client";
 import { ConfigService } from "@nestjs/config";
+import { refreshExpireDate } from "src/utils";
 
 @Injectable()
 export class UsersService {
@@ -51,6 +52,41 @@ export class UsersService {
             where: {
                 email,
             },
+        });
+    }
+    async findById(id: number) {
+        return await this.prisma.user.findFirst({
+            where: {
+                id,
+            },
+        });
+    }
+
+    async addRefreshToken(userId: number, refreshToken: string) {
+        // await this.prisma.user.update({
+        //     where: { id: userId },
+        //     data: {
+        //         Token: {
+        //             create: [
+        //                 {
+        //                     refreshToken,
+        //                 },
+        //             ],
+        //         },
+        //     },
+        // });
+        await this.prisma.token.create({
+            data: {
+                userId,
+                refreshToken,
+                expiresAt: refreshExpireDate(),
+            },
+        });
+    }
+
+    async removeRefreshToken(userId: number, refreshToken: string) {
+        await this.prisma.token.deleteMany({
+            where: { refreshToken, userId },
         });
     }
 }

@@ -4,17 +4,11 @@ import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 import { UsersModule } from "src/users/users.module";
 import { ConfigModule } from "@nestjs/config";
+import { AccessTokenStrategy } from "./strategies/accessToken.strategy";
+import { RefreshTokenStrategy } from "./strategies/refreshToken.strategy";
 @Module({
-    imports: [
-        UsersModule,
-        ConfigModule,
-        JwtModule.register({
-            global: true,
-            secret: process.env.JWT_SECRET,
-            signOptions: { expiresIn: "60s" },
-        }),
-    ],
-    providers: [AuthService],
+    imports: [UsersModule, ConfigModule, JwtModule.register({})],
+    providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy],
     controllers: [AuthController],
 })
 export class AuthModule {}

@@ -7,9 +7,9 @@ import { CreateUserDto, createUserSchema } from "./dto";
 export class UsersController {
     constructor(private userService: UsersService) {}
 
-    @Post("signup")
-    @UsePipes(new ZodValidationPipe(createUserSchema))
-    signup(@Body() createUserDto: CreateUserDto) {
-        return this.userService.create(createUserDto);
-    }
+    // @Post("signup")
+    // @UsePipes(new ZodValidationPipe(createUserSchema))
+    // signup(@Body() createUserDto: CreateUserDto) {
+    //     return this.userService.create(createUserDto);
+    // }
 }

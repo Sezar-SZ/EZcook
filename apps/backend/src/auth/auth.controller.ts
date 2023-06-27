@@ -6,17 +6,20 @@ import {
     HttpStatus,
     UsePipes,
     UseGuards,
-    Request,
     Get,
     Delete,
+    Res,
+    Req,
 } from "@nestjs/common";
+import { Response } from "express";
 import { AuthService } from "./auth.service";
 import { ZodValidationPipe } from "src/validators/zod.validator";
 import { LoginDto, loginSchema } from "./dto";
-import { AuthGuard } from "./guards/auth.guard";
 import { Role } from "@prisma/client";
 import { Roles } from "./decorators/roles.decorator";
 import { RolesGuard } from "./guards/roles.guard";
+import { CreateUserDto, createUserSchema } from "src/users/dto";
+import { AccessTokenGuard } from "./guards/accessToken.guard";
 
 @Controller("auth")
 export class AuthController {
@@ -25,20 +28,48 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post("login")
     @UsePipes(new ZodValidationPipe(loginSchema))
-    async login(@Body() loginDto: LoginDto) {
-        return await this.authService.login(loginDto);
+    async login(
+        @Body() loginDto: LoginDto,
+        @Res({ passthrough: true }) response: Response
+    ) {
+        return await this.authService.login(loginDto, response);
     }
 
-    @UseGuards(AuthGuard)
+    @Post("signup")
+    @UsePipes(new ZodValidationPipe(createUserSchema))
+    signup(
+        @Body() createUserDto: CreateUserDto,
+        @Res({ passthrough: true }) response: Response
+    ) {
+        return this.authService.signUp(createUserDto, response);
+    }
+
+    @Post("logout")
+    async logout(
+        @Req() request,
+        @Res({ passthrough: true }) response: Response
+    ) {
+        return this.authService.logout(request, response);
+    }
+
+    @Get("refresh")
+    async refreshTokens(@Req() req) {
+        return await this.authService.refresh(
+            req.body.sub,
+            req.signedCookies["refresh"]
+        );
+    }
+
+    @UseGuards(AccessTokenGuard)
     @Get()
-    async getProfile(@Request() req) {
+    async getProfile(@Req() req) {
         return await this.authService.getCurrentUser(req.body.email);
     }
 
     @Roles(Role.ADMIN)
-    @UseGuards(AuthGuard, RolesGuard)
+    @UseGuards(AccessTokenGuard, RolesGuard)
     @Delete()
     delete() {
-        return { message: "secret only for admin!" };
+        return { message: "protected route, only for user with admin role!" };
     }
 }
