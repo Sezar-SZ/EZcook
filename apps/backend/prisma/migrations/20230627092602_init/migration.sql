@@ -1,20 +1,15 @@
-/*
-  Warnings:
-
-  - You are about to drop the column `name` on the `User` table. All the data in the column will be lost.
-  - A unique constraint covering the columns `[email]` on the table `User` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `email` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `password` to the `User` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
 
--- AlterTable
-ALTER TABLE "User" DROP COLUMN "name",
-ADD COLUMN     "email" TEXT NOT NULL,
-ADD COLUMN     "password" TEXT NOT NULL,
-ADD COLUMN     "role" "Role" NOT NULL DEFAULT 'USER';
+-- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "role" "Role" NOT NULL DEFAULT 'USER',
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Food" (
@@ -38,6 +33,18 @@ CREATE TABLE "Likes" (
     CONSTRAINT "Likes_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Token" (
+    "id" TEXT NOT NULL,
+    "refreshToken" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "userId" INTEGER NOT NULL,
+
+    CONSTRAINT "Token_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -46,3 +53,6 @@ ALTER TABLE "Likes" ADD CONSTRAINT "Likes_userId_fkey" FOREIGN KEY ("userId") RE
 
 -- AddForeignKey
 ALTER TABLE "Likes" ADD CONSTRAINT "Likes_foodId_fkey" FOREIGN KEY ("foodId") REFERENCES "Food"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Token" ADD CONSTRAINT "Token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

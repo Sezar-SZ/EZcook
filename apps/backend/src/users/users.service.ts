@@ -4,32 +4,13 @@ import * as bcrypt from "bcrypt";
 
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateUserDto } from "./dto";
-import { Role } from "@prisma/client";
-import { ConfigService } from "@nestjs/config";
 import { refreshExpireDate } from "src/utils";
 
 @Injectable()
 export class UsersService {
-    constructor(
-        private prisma: PrismaService,
-        private configService: ConfigService
-    ) {}
+    constructor(private prisma: PrismaService) {}
 
-    async onModuleInit() {
-        const adminEmail = this.configService.get("ADMIN_EMAIL");
-        const adminPassword = this.configService.get("ADMIN_PASSWORD");
-        try {
-            await this.create(
-                {
-                    email: adminEmail,
-                    password: adminPassword,
-                },
-                "ADMIN"
-            );
-        } catch (error) {}
-    }
-
-    async create(createUserDto: CreateUserDto, role?: Role) {
+    async create(createUserDto: CreateUserDto) {
         const user = await this.prisma.user.findFirst({
             where: { email: createUserDto.email },
         });
@@ -42,7 +23,6 @@ export class UsersService {
             data: {
                 email: createUserDto.email,
                 password: hashedPassword,
-                role: role || "USER",
             },
         });
     }
@@ -63,18 +43,6 @@ export class UsersService {
     }
 
     async addRefreshToken(userId: number, refreshToken: string) {
-        // await this.prisma.user.update({
-        //     where: { id: userId },
-        //     data: {
-        //         Token: {
-        //             create: [
-        //                 {
-        //                     refreshToken,
-        //                 },
-        //             ],
-        //         },
-        //     },
-        // });
         await this.prisma.token.create({
             data: {
                 userId,
