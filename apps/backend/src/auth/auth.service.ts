@@ -4,15 +4,15 @@ import {
     UnauthorizedException,
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
-import { Request, Response } from "express";
+import { Response } from "express";
 import { JwtService } from "@nestjs/jwt";
 import { UsersService } from "../users/users.service";
 import { LoginDto } from "./dto";
 import { CreateUserDto } from "src/users/dto";
 import { ConfigService } from "@nestjs/config";
 import { Role } from "@prisma/client";
-import { PrismaService } from "src/prisma/prisma.service";
 import { refreshExpireDate } from "src/utils";
+import { RedisService } from "src/redis/redis.service";
 
 @Injectable()
 export class AuthService {
@@ -20,7 +20,7 @@ export class AuthService {
         private jwtService: JwtService,
         private userService: UsersService,
         private configService: ConfigService,
-        private prismaService: PrismaService
+        private redisService: RedisService
     ) {}
 
     async signUp(createUserDto: CreateUserDto, response: Response) {
@@ -43,6 +43,7 @@ export class AuthService {
             });
             return { accessToken: tokens.accessToken };
         } catch (error) {
+            if (error.response) return error.response;
             return error;
         }
     }
@@ -68,21 +69,28 @@ export class AuthService {
         throw new UnauthorizedException();
     }
 
-    async logout(request: Request, response: Response) {
-        if (request.signedCookies["refresh"])
-            await this.userService.removeRefreshToken(
-                request.body.sub,
+    async logout(request, response: Response) {
+        if (request.signedCookies["refresh"]) {
+            const sub = await this.decodeIdFromRefresh(
                 request.signedCookies["refresh"]
             );
+            await this.userService.removeRefreshToken(
+                sub,
+                request.signedCookies["refresh"]
+            );
+        }
         response.clearCookie("refresh");
         return { message: "logout successfully" };
     }
 
-    async refresh(userId: number, refreshToken) {
+    async refresh(req) {
+        const refreshToken = req.signedCookies["refresh"];
+        const userId = await this.decodeIdFromRefresh(refreshToken);
         const user = await this.userService.findById(userId);
-        const refreshTokenMatches = await this.prismaService.token.findFirst({
-            where: { userId, refreshToken },
-        });
+        const refreshTokenMatches = await this.redisService.get(
+            `user${userId}:${refreshToken}`
+        );
+
         if (!user || !refreshToken || !refreshTokenMatches)
             throw new ForbiddenException("Access Denied");
         const tokens = await this.getTokens(user.id, user.email, user.role);
@@ -121,6 +129,11 @@ export class AuthService {
             accessToken,
             refreshToken,
         };
+    }
+
+    async decodeIdFromRefresh(refreshToken: string) {
+        if (refreshToken) return await this.jwtService.decode(refreshToken).sub;
+        throw new UnauthorizedException();
     }
 
     async getCurrentUser(email: string) {

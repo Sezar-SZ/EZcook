@@ -4,11 +4,16 @@ import * as bcrypt from "bcrypt";
 
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateUserDto } from "./dto";
-import { refreshExpireDate } from "src/utils";
+import { RedisService } from "src/redis/redis.service";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class UsersService {
-    constructor(private prisma: PrismaService) {}
+    constructor(
+        private prisma: PrismaService,
+        private redis: RedisService,
+        private config: ConfigService
+    ) {}
 
     async create(createUserDto: CreateUserDto) {
         const user = await this.prisma.user.findFirst({
@@ -43,18 +48,19 @@ export class UsersService {
     }
 
     async addRefreshToken(userId: number, refreshToken: string) {
-        await this.prisma.token.create({
-            data: {
-                userId,
-                refreshToken,
-                expiresAt: refreshExpireDate(),
-            },
+        await this.redis.set({
+            key: `user${userId}:${refreshToken}`,
+            value: 1,
+            time:
+                parseInt(
+                    this.config.get("REFRESH_EXPIRATION").slice(0, -1),
+                    10
+                ) *
+                (24 * 60 * 60),
         });
     }
 
     async removeRefreshToken(userId: number, refreshToken: string) {
-        await this.prisma.token.deleteMany({
-            where: { refreshToken, userId },
-        });
+        await this.redis.del(`user${userId}:${refreshToken}`);
     }
 }

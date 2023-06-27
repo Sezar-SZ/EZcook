@@ -54,16 +54,14 @@ export class AuthController {
 
     @Get("refresh")
     async refreshTokens(@Req() req) {
-        return await this.authService.refresh(
-            req.body.sub,
-            req.signedCookies["refresh"]
-        );
+        return await this.authService.refresh(req);
     }
 
     @UseGuards(AccessTokenGuard)
     @Get()
     async getProfile(@Req() req) {
-        return await this.authService.getCurrentUser(req.body.email);
+        console.log(req.user);
+        return await this.authService.getCurrentUser(req.user.email);
     }
 
     @Roles(Role.ADMIN)

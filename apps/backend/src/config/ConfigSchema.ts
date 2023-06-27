@@ -18,7 +18,11 @@ const ConfigSchema = z.object({
     DB_PASSWORD: z.string(),
     DB_NAME: z.string(),
     DB_PORT: z.coerce.number(),
+    DB_HOST: z.string(),
     DATABASE_URL: z.string().url(),
+    REDIS_PORT: z.coerce.number(),
+    REDIS_HOST: z.string(),
+    REDIS_URL: z.string().url(),
 });
 
 export default () => ConfigSchema.parse(process.env);
