@@ -1,5 +1,7 @@
 import Link from "next/link";
 import NavButtons from "./navbar-buttons";
+import Image from "next/image";
+import CookingHat from "@/app/asset/cookingHat.png";
 
 export default function Navbar() {
     return (
@@ -11,8 +13,8 @@ export default function Navbar() {
                 href={"/"}
             >
                 <span className="ml-3 text-2xl">ایزی کوک</span>
-                <img
-                    src="/cookingHat.png"
+                <Image
+                    src={CookingHat}
                     alt="easy cook logo"
                     className=" w-[5vmax]  min-w-[4rem] max-w-[7rem] object-contain"
                 />

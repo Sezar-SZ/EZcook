@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="fa" dir="rtl" className={iranSans.className}>
-            <body className="bg-secondary">
+            <body className="overflow-x-hidden bg-secondary">
                 <Navbar />
                 {children}
             </body>
