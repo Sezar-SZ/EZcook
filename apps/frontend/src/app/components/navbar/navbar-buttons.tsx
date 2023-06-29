@@ -34,6 +34,15 @@ export default function NavButtons() {
 export function Buttons({ bg_hover }: { bg_hover?: boolean }) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    const notLoggedInRoutes = {
+        ورود: "/login",
+        جستجو: "/search",
+    };
+    const loggedInRoutes = {
+        جستجو: "/search",
+        "علاقه مندی ها": "/favorites",
+    };
+
     return (
         <>
             {isLoggedIn ? (
@@ -43,39 +52,31 @@ export function Buttons({ bg_hover }: { bg_hover?: boolean }) {
                             bg_hover && "hover:bg-red-900"
                         }`}
                     >
-                        <Link href="/">خروج</Link>
+                        خروج
                     </li>
-                    <li
-                        className={`navbar-li ${
-                            bg_hover && "hover:bg-red-900"
-                        }`}
-                    >
-                        <Link href="/">جستجو</Link>
-                    </li>
-                    <li
-                        className={`navbar-li whitespace-nowrap ${
-                            bg_hover && "hover:bg-red-900"
-                        }`}
-                    >
-                        <Link href="/">علاقه مندی ها</Link>
-                    </li>
+                    {Object.entries(loggedInRoutes).map((el, i) => (
+                        <li
+                            className={`navbar-li ${
+                                bg_hover && "hover:bg-red-900"
+                            }`}
+                            key={i}
+                        >
+                            <Link href={el[1]}>{el[0]}</Link>
+                        </li>
+                    ))}
                 </>
             ) : (
                 <>
-                    <li
-                        className={`navbar-li ${
-                            bg_hover && "hover:bg-red-900"
-                        }`}
-                    >
-                        <Link href="/">ورود</Link>
-                    </li>
-                    <li
-                        className={`navbar-li whitespace-nowrap ${
-                            bg_hover && "hover:bg-red-900"
-                        }`}
-                    >
-                        <Link href="/">جستجو</Link>
-                    </li>
+                    {Object.entries(notLoggedInRoutes).map((el, i) => (
+                        <li
+                            className={`navbar-li ${
+                                bg_hover && "hover:bg-red-900"
+                            }`}
+                            key={i}
+                        >
+                            <Link href={el[1]}>{el[0]}</Link>
+                        </li>
+                    ))}
                 </>
             )}
         </>
