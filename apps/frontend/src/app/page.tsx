@@ -2,7 +2,7 @@ import Image from "next/image";
 import CookingBook from "@/app/asset/cookingBook.jpg";
 export default function Home() {
     return (
-        <main className="mx-auto mt-4 w-[95%] rounded-md bg-slate-200 px-4 py-2">
+        <main className="mx-auto mt-4 w-[95%] rounded-md bg-slate-200 p-4">
             <div className="flex w-full flex-col-reverse border-2 border-dotted border-red-800 p-2 sm:flex-row">
                 <div className="flex flex-1 items-center">
                     <p className="mt-4 pl-5 pr-2 text-justify text-base leading-7 sm:mt-0 sm:text-lg sm:leading-10">
