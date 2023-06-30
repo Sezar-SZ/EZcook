@@ -7,6 +7,7 @@ enum NodeEnv {
 
 const ConfigSchema = z.object({
     NODE_ENV: z.nativeEnum(NodeEnv),
+    HOST_URL: z.string().url(),
     COOKIE_SECRET: z.string(),
     JWT_ACCESS_SECRET: z.string(),
     JWT_REFRESH_SECRET: z.string(),

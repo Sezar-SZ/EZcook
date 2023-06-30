@@ -4,6 +4,7 @@ import { useState } from "react";
 import Hamburger from "@/app/asset/menu.svg";
 import CloseIcon from "@/app/asset/x.svg";
 import Link from "next/link";
+import useStore from "@/app/hooks/useStore";
 
 export default function NavButtons() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -32,7 +33,7 @@ export default function NavButtons() {
 }
 
 export function Buttons({ bg_hover }: { bg_hover?: boolean }) {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const isLoggedIn = useStore((state) => state.accessToken);
 
     const notLoggedInRoutes = {
         ورود: "/login",

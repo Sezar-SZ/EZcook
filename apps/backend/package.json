@@ -5,7 +5,7 @@
     "author": "",
     "private": true,
     "license": "UNLICENSED",
-    "main": "index.js",
+    "main": "index.ts",
     "prisma": {
         "seed": "pnpx tsx prisma/seed.ts"
     },
