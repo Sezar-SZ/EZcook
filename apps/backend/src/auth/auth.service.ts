@@ -1,6 +1,7 @@
 import {
     ForbiddenException,
     Injectable,
+    InternalServerErrorException,
     UnauthorizedException,
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
@@ -43,8 +44,9 @@ export class AuthService {
             });
             return { accessToken: tokens.accessToken };
         } catch (error) {
-            if (error.response) return error.response;
-            return error;
+            if (error.response) throw new UnauthorizedException(error.response);
+
+            throw new InternalServerErrorException(error);
         }
     }
 

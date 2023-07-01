@@ -4,18 +4,16 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Logo from "@/app/asset/logo.png";
 import useStore from "../hooks/useStore";
 import { AuthError, loginResponse } from "../types/auth";
 import { AxiosError } from "axios";
-import { userLogin } from "../api/auth";
+import { userLogin, userSignup } from "../api/auth";
 import { loginSchema, LoginDto } from "backend";
 import { useState } from "react";
-
-// TODO: Error Handling
-// TODO: signup
+import AlertBox, { MessageType } from "../components/AlertBox";
 
 export default function Login() {
     const login = useStore((state) => state.login);
@@ -26,8 +24,14 @@ export default function Login() {
         formState: { errors },
     } = useForm<LoginDto>({ resolver: zodResolver(loginSchema) });
 
-    const onLogin: SubmitHandler<LoginDto> = () =>
+    const onLogin: SubmitHandler<LoginDto> = () => {
+        setMessage("");
         loginMutation.mutate(getValues());
+    };
+    const onSignup: SubmitHandler<LoginDto> = () => {
+        setMessage("");
+        signupMutation.mutate(getValues());
+    };
 
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -46,23 +50,57 @@ export default function Login() {
                 console.log(nextURL);
                 router.push(nextURL);
             },
+            onError(error) {
+                setMessageType("error");
+                if (error.response?.status === 401)
+                    setMessage("invalid email or password");
+            },
+        }
+    );
+    const signupMutation = useMutation<
+        loginResponse,
+        AxiosError<AuthError>,
+        LoginDto
+    >(
+        (loginDto: LoginDto) => userSignup(loginDto),
+
+        {
+            onSuccess(data) {
+                login(data.accessToken);
+                console.log(nextURL);
+                router.push(nextURL);
+            },
+            onError(error) {
+                console.log(error);
+
+                setMessageType("error");
+                if (error.response?.status === 401)
+                    setMessage(error.response.data.error!);
+            },
         }
     );
 
-    const errorHandler = (error) => console.log(error);
+    const errorHandler = (error: FieldErrors) => {
+        let errorMessage = "";
+        Object.entries(error).forEach(
+            ([key, value]) => (errorMessage += `${key}: ${value?.message}\n`)
+        );
+        setMessage(errorMessage);
+    };
 
-    const [errorMessage, setErrorMessage] = useState("");
+    const [message, setMessage] = useState("");
+    const [messageType, setMessageType] = useState<MessageType>("error");
 
     return (
         <div className="mx-auto mt-[10vh] flex w-[90vw] flex-col items-center justify-center sm:w-[40vmin]">
-            {errorMessage && (
-                <div className="w-full bg-red-500 py-5 text-left text-red-800">
-                    {Object.entries(errors).map(
-                        ([key, value]) => `${key}: ${value.message}`
-                    )}
-                </div>
+            {message && (
+                <AlertBox message={message} messageType={messageType} />
             )}
-            <Image src={Logo} alt="easy cook logo" className="w-[20vmin]" />
+            <Image
+                src={Logo}
+                alt="easy cook logo"
+                className="mt-4 w-[20vmin]"
+            />
             <form
                 className="mt-4 flex w-full flex-col space-y-6"
                 dir="ltr"
@@ -92,9 +130,7 @@ export default function Login() {
                     <button
                         type="button"
                         className="w-full rounded-md bg-primary px-1 py-2 text-white"
-                        onClick={() => {
-                            console.log("sign up");
-                        }}
+                        onClick={handleSubmit(onSignup, errorHandler)}
                     >
                         عضویت
                     </button>

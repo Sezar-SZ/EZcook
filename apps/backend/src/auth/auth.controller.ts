@@ -45,6 +45,7 @@ export class AuthController {
     }
 
     @Post("logout")
+    @HttpCode(HttpStatus.OK)
     async logout(
         @Req() request,
         @Res({ passthrough: true }) response: Response

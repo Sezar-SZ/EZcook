@@ -5,6 +5,8 @@ import Hamburger from "@/app/asset/menu.svg";
 import CloseIcon from "@/app/asset/x.svg";
 import Link from "next/link";
 import useStore from "@/app/hooks/useStore";
+import { userLogout } from "@/app/api/auth";
+import { useRouter } from "next/navigation";
 
 export default function NavButtons() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -34,6 +36,17 @@ export default function NavButtons() {
 
 export function Buttons({ bg_hover }: { bg_hover?: boolean }) {
     const isLoggedIn = useStore((state) => state.accessToken);
+    const logout = useStore((state) => state.logout);
+
+    const router = useRouter();
+
+    const userLogoutApi = async () => {
+        try {
+            await userLogout();
+            logout();
+            router.push("/");
+        } catch {}
+    };
 
     const notLoggedInRoutes = {
         ورود: "/login",
@@ -52,6 +65,7 @@ export function Buttons({ bg_hover }: { bg_hover?: boolean }) {
                         className={`navbar-li ${
                             bg_hover && "hover:bg-red-900"
                         }`}
+                        onClick={userLogoutApi}
                     >
                         خروج
                     </li>
