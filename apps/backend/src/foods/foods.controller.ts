@@ -3,19 +3,26 @@ import {
     Get,
     Post,
     Body,
-    Patch,
     Param,
     Delete,
     UseGuards,
     HttpCode,
     HttpStatus,
+    UsePipes,
+    UseInterceptors,
+    ParseFilePipe,
+    UploadedFile,
+    FileTypeValidator,
+    MaxFileSizeValidator,
 } from "@nestjs/common";
 import { FoodsService } from "./foods.service";
-import { CreateFoodDto } from "./dto";
+import { CreateFoodDto, createFoodSchema } from "./dto";
 import { Roles } from "src/auth/decorators/roles.decorator";
 import { Role } from "@prisma/client";
 import { AccessTokenGuard } from "src/auth/guards/accessToken.guard";
 import { RolesGuard } from "src/auth/guards/roles.guard";
+import { ZodValidationPipe } from "src/validators/zod.validator";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller("foods")
 export class FoodsController {
@@ -23,8 +30,24 @@ export class FoodsController {
 
     @Post()
     @UseGuards(AccessTokenGuard)
-    create(@Body() createFoodDto: CreateFoodDto) {
-        return this.foodsService.create(createFoodDto);
+    @UseInterceptors(FileInterceptor("food_picture"))
+    @UsePipes(
+        new ZodValidationPipe(createFoodSchema),
+        FileInterceptor("food_picture")
+    )
+    create(
+        @Body() createFoodDto: CreateFoodDto,
+        @UploadedFile(
+            new ParseFilePipe({
+                validators: [
+                    new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 10 }),
+                    new FileTypeValidator({ fileType: ".(png|jpg|jpeg)" }),
+                ],
+            })
+        )
+        food_picture: Express.Multer.File
+    ) {
+        return this.foodsService.create(createFoodDto, food_picture);
     }
 
     @Get("/search/:q")
@@ -34,7 +57,7 @@ export class FoodsController {
 
     @Get(":id")
     findOne(@Param("id") id: string) {
-        return this.foodsService.findOne(+id);
+        return this.foodsService.findOne(id);
     }
 
     @Roles(Role.ADMIN)
