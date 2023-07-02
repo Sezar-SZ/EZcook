@@ -7,5 +7,6 @@ export const FoodModel = z.object({
     cooking_duration: z.number().int(),
     serves: z.number().int(),
     ingredients: z.string().array(),
+    isReviewed: z.boolean(),
     food_recipe: z.string(),
 });

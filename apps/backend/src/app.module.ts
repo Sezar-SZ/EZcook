@@ -6,7 +6,8 @@ import { UsersModule } from "./users/users.module";
 import { PrismaService } from "./prisma/prisma.service";
 import { PrismaModule } from "./prisma/prisma.module";
 import { AuthModule } from "./auth/auth.module";
-import { RedisModule } from './redis/redis.module';
+import { RedisModule } from "./redis/redis.module";
+import { FoodsModule } from "./foods/foods.module";
 import Config from "./config/ConfigSchema";
 
 @Module({
@@ -19,6 +20,7 @@ import Config from "./config/ConfigSchema";
         }),
         AuthModule,
         RedisModule,
+        FoodsModule,
     ],
     controllers: [AppController],
     providers: [AppService, PrismaService],

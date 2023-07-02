@@ -54,6 +54,7 @@ model Food {
   serves           Int
   ingredients      String[]
   food_recipe      String
+  isReviewed       Boolean  @default(false)
   Likes            Likes[]
 }
 

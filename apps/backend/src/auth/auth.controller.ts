@@ -64,11 +64,4 @@ export class AuthController {
         console.log(req.user);
         return await this.authService.getCurrentUser(req.user.email);
     }
-
-    @Roles(Role.ADMIN)
-    @UseGuards(AccessTokenGuard, RolesGuard)
-    @Delete()
-    delete() {
-        return { message: "protected route, only for user with admin role!" };
-    }
 }
