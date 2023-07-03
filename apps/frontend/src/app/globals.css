@@ -4,6 +4,6 @@
 
 @layer components {
     .navbar-li {
-        @apply flex flex-1 cursor-pointer items-center justify-center text-center;
+        @apply flex flex-1 cursor-pointer select-none items-center justify-center whitespace-nowrap text-center;
     }
 }

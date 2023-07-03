@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import Hamburger from "@/app/asset/menu.svg";
-import CloseIcon from "@/app/asset/x.svg";
+import { Dispatch, SetStateAction, useState } from "react";
+import { Menu, X } from "react-feather";
 import Link from "next/link";
 import useStore from "@/app/hooks/useStore";
 import { userLogout } from "@/app/api/auth";
@@ -13,20 +12,20 @@ export default function NavButtons() {
     return (
         <>
             <ul className="hidden w-full max-w-[43vw] justify-center self-stretch sm:flex">
-                <Buttons bg_hover />
+                <Buttons bg_hover closeMenu={setIsMobileMenuOpen} />
             </ul>
             {!isMobileMenuOpen ? (
                 <div className="mr-4 block sm:hidden">
-                    <Hamburger onClick={() => setIsMobileMenuOpen(true)} />
+                    <Menu onClick={() => setIsMobileMenuOpen(true)} />
                 </div>
             ) : (
                 <div className="absolute left-0 top-0 z-[999] flex h-screen w-screen items-center justify-center bg-gray-900">
-                    <CloseIcon
+                    <X
                         className="absolute right-4 top-4"
                         onClick={() => setIsMobileMenuOpen(false)}
                     />
                     <div className="flex flex-col space-y-20">
-                        <Buttons />
+                        <Buttons closeMenu={setIsMobileMenuOpen} />
                     </div>
                 </div>
             )}
@@ -34,7 +33,15 @@ export default function NavButtons() {
     );
 }
 
-export function Buttons({ bg_hover }: { bg_hover?: boolean }) {
+// TODO: close menu when clicked...
+
+export function Buttons({
+    bg_hover,
+    closeMenu,
+}: {
+    bg_hover?: boolean;
+    closeMenu: Dispatch<SetStateAction<boolean>>;
+}) {
     const isLoggedIn = useStore((state) => state.accessToken);
     const logout = useStore((state) => state.logout);
 
@@ -48,12 +55,18 @@ export function Buttons({ bg_hover }: { bg_hover?: boolean }) {
         } catch {}
     };
 
+    const buttonClicked = (href: string) => {
+        closeMenu(false);
+        router.push(href);
+    };
+
     const notLoggedInRoutes = {
         ورود: "/login",
         جستجو: "/search",
     };
     const loggedInRoutes = {
         جستجو: "/search",
+        "ثبت غذا": "/create",
         "علاقه مندی ها": "/favorites",
     };
 
@@ -71,12 +84,13 @@ export function Buttons({ bg_hover }: { bg_hover?: boolean }) {
                     </li>
                     {Object.entries(loggedInRoutes).map((el, i) => (
                         <li
+                            key={i}
                             className={`navbar-li ${
                                 bg_hover && "hover:bg-red-900"
                             }`}
-                            key={i}
+                            onClick={() => buttonClicked(el[1])}
                         >
-                            <Link href={el[1]}>{el[0]}</Link>
+                            {el[0]}
                         </li>
                     ))}
                 </>
@@ -84,12 +98,13 @@ export function Buttons({ bg_hover }: { bg_hover?: boolean }) {
                 <>
                     {Object.entries(notLoggedInRoutes).map((el, i) => (
                         <li
+                            key={i}
                             className={`navbar-li ${
                                 bg_hover && "hover:bg-red-900"
                             }`}
-                            key={i}
+                            onClick={() => buttonClicked(el[1])}
                         >
-                            <Link href={el[1]}>{el[0]}</Link>
+                            {el[0]}
                         </li>
                     ))}
                 </>

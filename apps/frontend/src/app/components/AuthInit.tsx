@@ -10,18 +10,25 @@ import { AxiosError } from "axios";
 
 export default function AuthInit({ children }: { children: React.ReactNode }) {
     const login = useStore((state) => state.login);
+    const authChecked = useStore((state) => state.authChecked);
+    const setAuthChecked = useStore((state) => state.setAuthChecked);
     const { isLoading, isFetching, isError, data, error } = useQuery<
         RefreshResponse,
         AxiosError<AuthError>
     >(["checkAuth"], checkAuth, { retry: false, refetchOnWindowFocus: false });
 
     useEffect(() => {
-        if (data && data.accessToken) login(data.accessToken);
+        if (data) {
+            if (data.accessToken) login(data.accessToken);
+        }
+        setAuthChecked();
     }, [data]);
 
     return (
         <>
-            {(data || (isError && error.response?.status === 401)) && children}
+            {(data || (isError && error.response?.status === 401)) &&
+                authChecked === true &&
+                children}
             {isLoading && <div></div>}
             {isError && error.response?.status !== 401 && (
                 <h1 className="w-screen text-left text-red-700" dir="ltr">

@@ -15,6 +15,8 @@ import { loginSchema, LoginDto } from "backend";
 import { useState } from "react";
 import AlertBox, { MessageType } from "../components/AlertBox";
 
+// TODO: show loading spinner for mutations
+
 export default function Login() {
     const login = useStore((state) => state.login);
     const {
