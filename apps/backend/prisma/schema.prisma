@@ -47,13 +47,14 @@ enum Role {
 }
 
 model Food {
-  id               String   @id @default(uuid())
+  id               String   @id @default(dbgenerated("nanoid()")) @db.VarChar(11)
   food_name        String
   food_picture     String
   cooking_duration Int
   serves           Int
   ingredients      String[]
   food_recipe      String
+  slug             String?
   isReviewed       Boolean  @default(false)
   Likes            Likes[]
 }
@@ -62,7 +63,7 @@ model Likes {
   id     Int    @id @default(autoincrement())
   user   User   @relation(fields: [userId], references: [id])
   userId Int
-  food   Food   @relation(fields: [foodId], references: [id])
+  food   Food   @relation(fields: [foodId], references: [id], onDelete: Cascade)
   foodId String
 }
 
