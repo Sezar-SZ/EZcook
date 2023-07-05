@@ -31,18 +31,11 @@ export class FoodsService {
                 data: {
                     food_name: createFoodDto.food_name,
                     food_picture: `/${fileName}`,
-                    serves: createFoodDto.serves,
+                    serves: +createFoodDto.serves,
                     ingredients: createFoodDto.ingredients,
-                    cooking_duration: createFoodDto.cooking_duration,
+                    cooking_duration: +createFoodDto.cooking_duration,
                     food_recipe: createFoodDto.food_recipe,
-                },
-            });
-
-            const slug = slugify(food.food_name);
-            await this.prisma.food.update({
-                where: { id: food.id },
-                data: {
-                    slug,
+                    slug: slugify(createFoodDto.food_name),
                 },
             });
 

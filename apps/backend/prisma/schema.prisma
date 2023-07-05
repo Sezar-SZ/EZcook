@@ -47,15 +47,15 @@ enum Role {
 }
 
 model Food {
-  id               String   @id @default(dbgenerated("nanoid()")) @db.VarChar(11)
+  id               String  @id @default(dbgenerated("nanoid()")) @db.VarChar(11)
   food_name        String
   food_picture     String
   cooking_duration Int
   serves           Int
-  ingredients      String[]
+  ingredients      String
   food_recipe      String
-  slug             String?
-  isReviewed       Boolean  @default(false)
+  slug             String
+  isReviewed       Boolean @default(false)
   Likes            Likes[]
 }
 

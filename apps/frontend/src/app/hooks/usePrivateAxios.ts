@@ -1,13 +1,12 @@
 import axios from "axios";
 import useStore from "@/app/hooks/useStore";
-import { config } from "@/app/utils/config";
 
 // https://dev.to/ms_yogii/useaxios-a-simple-custom-hook-for-calling-apis-using-axios-2dkj
 // https://blog.sreejit.dev/custom-axios-hook-useaxios-in-typescript-react
 // https://www.bezkoder.com/axios-interceptors-refresh-token/
 
 function refreshRequest() {
-    const url = `${config.NEXT_PUBLIC_BASE_URL}/auth/refresh/`;
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/refresh/`;
     return axios.post(url, {}, { withCredentials: true });
 }
 

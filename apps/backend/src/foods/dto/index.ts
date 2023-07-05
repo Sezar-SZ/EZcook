@@ -1,4 +1,4 @@
-import { FoodModel } from "prisma/zod";
+import { FoodModel } from "../../../prisma/zod";
 import { z } from "zod";
 
 export const createFoodSchema = FoodModel.omit({

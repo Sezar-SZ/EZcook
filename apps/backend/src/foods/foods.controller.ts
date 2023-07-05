@@ -29,10 +29,11 @@ export class FoodsController {
     constructor(private readonly foodsService: FoodsService) {}
 
     @Post()
-    @UseGuards(AccessTokenGuard)
+    // @UseGuards(AccessTokenGuard)
     @UseInterceptors(FileInterceptor("food_picture"))
     @UsePipes(
-        new ZodValidationPipe(createFoodSchema),
+        // new ParseFormDataJsonPipe({ except: ["food_picture"] }),
+        new ZodValidationPipe(createFoodSchema, { ignore: "buffer" }),
         FileInterceptor("food_picture")
     )
     create(
@@ -40,8 +41,13 @@ export class FoodsController {
         @UploadedFile(
             new ParseFilePipe({
                 validators: [
-                    new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 10 }),
-                    new FileTypeValidator({ fileType: ".(png|jpg|jpeg)" }),
+                    new MaxFileSizeValidator({
+                        maxSize: 1024 * 1024 * 10,
+                        message: "حجم عکس تا 10 مگابایت",
+                    }),
+                    new FileTypeValidator({
+                        fileType: ".(png|jpg|jpeg)",
+                    }),
                 ],
             })
         )

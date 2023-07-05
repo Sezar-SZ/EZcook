@@ -49,7 +49,6 @@ export default function Login() {
         {
             onSuccess(data) {
                 login(data.accessToken);
-                console.log(nextURL);
                 router.push(nextURL);
             },
             onError(error) {
@@ -69,12 +68,9 @@ export default function Login() {
         {
             onSuccess(data) {
                 login(data.accessToken);
-                console.log(nextURL);
                 router.push(nextURL);
             },
             onError(error) {
-                console.log(error);
-
                 setMessageType("error");
                 if (error.response?.status === 401)
                     setMessage(error.response.data.error!);

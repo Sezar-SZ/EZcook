@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Food" ALTER COLUMN "cooking_duration" SET DATA TYPE TEXT,
+ALTER COLUMN "serves" SET DATA TYPE TEXT;
