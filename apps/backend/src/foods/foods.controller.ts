@@ -57,8 +57,8 @@ export class FoodsController {
     }
 
     @Get("/search/:q")
-    search() {
-        return this.foodsService.search();
+    search(@Param("q") q: string) {
+        return this.foodsService.search(q);
     }
 
     @Get(":id")

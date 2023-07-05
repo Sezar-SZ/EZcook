@@ -8,6 +8,7 @@ import { CreateFoodDto } from "./dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { extname } from "path";
 import slugify from "slugify";
+import { alphabet } from "src/utils";
 
 @Injectable()
 export class FoodsService {
@@ -27,6 +28,11 @@ export class FoodsService {
             const ws = createWriteStream(`images/${fileName}`);
             ws.write(food_picture.buffer);
 
+            slugify.extend(alphabet);
+            const slug = slugify(createFoodDto.food_name, {
+                remove: /[$*_+~.()'"!\-:@]+/g,
+            });
+
             const food = await this.prisma.food.create({
                 data: {
                     food_name: createFoodDto.food_name,
@@ -35,7 +41,7 @@ export class FoodsService {
                     ingredients: createFoodDto.ingredients,
                     cooking_duration: +createFoodDto.cooking_duration,
                     food_recipe: createFoodDto.food_recipe,
-                    slug: slugify(createFoodDto.food_name),
+                    slug,
                 },
             });
 
@@ -46,8 +52,15 @@ export class FoodsService {
         }
     }
 
-    search() {
-        return `This action search through all foods`;
+    async search(q: string) {
+        const result = await this.prisma.food.findMany({
+            where: {
+                food_name: {
+                    search: q,
+                },
+            },
+        });
+        return result;
     }
 
     async findOne(id: string) {
