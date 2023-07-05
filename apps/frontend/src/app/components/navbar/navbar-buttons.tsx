@@ -1,8 +1,7 @@
 "use client";
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { Menu, X } from "react-feather";
-import Link from "next/link";
 import useStore from "@/app/hooks/useStore";
 import { userLogout } from "@/app/api/auth";
 import { useRouter } from "next/navigation";
@@ -33,8 +32,6 @@ export default function NavButtons() {
     );
 }
 
-// TODO: close menu when clicked...
-
 export function Buttons({
     bg_hover,
     closeMenu,
@@ -42,7 +39,7 @@ export function Buttons({
     bg_hover?: boolean;
     closeMenu: Dispatch<SetStateAction<boolean>>;
 }) {
-    const isLoggedIn = useStore((state) => state.accessToken);
+    const accessToken = useStore((state) => state.accessToken);
     const logout = useStore((state) => state.logout);
 
     const router = useRouter();
@@ -72,7 +69,7 @@ export function Buttons({
 
     return (
         <>
-            {isLoggedIn ? (
+            {Array.isArray(accessToken) && accessToken.length > 0 ? (
                 <>
                     <li
                         className={`navbar-li ${

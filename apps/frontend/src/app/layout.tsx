@@ -2,7 +2,7 @@ import localFont from "next/font/local";
 import Providers from "./providers";
 import Navbar from "@/app/components/navbar/navbar";
 import "./globals.css";
-import AuthInit from "@/app/components/AuthInit";
+import AuthProvider from "@/app/components/AuthProvider";
 
 export const metadata = {
     title: "ایزی کوک",
@@ -22,10 +22,10 @@ export default function RootLayout({
         <html lang="fa" dir="rtl" className={iranSans.className}>
             <body className="overflow-x-hidden bg-secondary">
                 <Providers>
-                    <AuthInit>
+                    <AuthProvider>
                         <Navbar />
                         {children}
-                    </AuthInit>
+                    </AuthProvider>
                 </Providers>
             </body>
         </html>

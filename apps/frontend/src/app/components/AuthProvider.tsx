@@ -1,34 +1,34 @@
 "use client";
 
-import { useEffect } from "react";
-import { config } from "../utils/config";
+import { useEffect, useState } from "react";
 import useStore from "@/app/hooks/useStore";
 import { useQuery } from "@tanstack/react-query";
 import { checkAuth } from "../api/auth";
 import { AuthError, RefreshResponse } from "../types/auth";
 import { AxiosError } from "axios";
 
-export default function AuthInit({ children }: { children: React.ReactNode }) {
+export default function AuthProvider({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
     const login = useStore((state) => state.login);
-    const authChecked = useStore((state) => state.authChecked);
-    const setAuthChecked = useStore((state) => state.setAuthChecked);
-    const { isLoading, isFetching, isError, data, error } = useQuery<
+    const logout = useStore((state) => state.logout);
+    const { isLoading, isError, data, error } = useQuery<
         RefreshResponse,
         AxiosError<AuthError>
     >(["checkAuth"], checkAuth, { retry: false, refetchOnWindowFocus: false });
 
     useEffect(() => {
-        if (data) {
-            if (data.accessToken) login(data.accessToken);
+        if (data?.accessToken) login(data.accessToken);
+        if (error?.response?.status === 401) {
+            logout();
         }
-        setAuthChecked();
-    }, [data]);
+    }, [isLoading, isError, data, error]);
 
     return (
         <>
-            {(data || (isError && error.response?.status === 401)) &&
-                authChecked === true &&
-                children}
+            {(data || (isError && error.response?.status === 401)) && children}
             {isLoading && <div></div>}
             {isError && error.response?.status !== 401 && (
                 <h1 className="w-screen text-left text-red-700" dir="ltr">

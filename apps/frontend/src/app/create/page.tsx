@@ -19,9 +19,12 @@ interface CleanCreateFoodDto extends CreateFoodDto {
 }
 
 export default function CreatePage() {
+    const accessToken = useStore((state) => state.accessToken);
+    useEffect(() => {
+        if (accessToken?.length === 0) router.push("/login?next=create");
+    }, [accessToken]);
+
     const router = useRouter();
-    const isLoggedIn = useStore((state) => state.accessToken);
-    const authChecked = useStore((state) => state.authChecked);
 
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState<MessageType>("error");
@@ -99,17 +102,11 @@ export default function CreatePage() {
             },
             onError(error) {
                 window.scrollTo(0, 0);
-                console.log(error);
                 setMessage(error.response?.data.message || "خطایی رخ داده است");
                 setMessageType("error");
             },
         }
     );
-    useEffect(() => {
-        // TODO: move this logic to AuthProvider?
-        if (isLoggedIn === null && authChecked)
-            router.push("/login?next=create");
-    }, []);
 
     return (
         <main className="mx-auto my-5 flex w-[90vw] flex-col items-center justify-start overflow-y-auto rounded ">
