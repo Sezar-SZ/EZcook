@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Search } from "react-feather";
 import { AuthError } from "../types/auth";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { searchFood } from "../api";
+import { searchFood } from "../api/client";
 import AlertBox from "../components/AlertBox";
 import Spinner from "../components/LoadingSpinner";
 import FoodCard from "../components/FoodCard";
