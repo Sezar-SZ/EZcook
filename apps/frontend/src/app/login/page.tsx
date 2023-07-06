@@ -10,7 +10,7 @@ import Logo from "@/app/asset/logo.png";
 import useStore from "../hooks/useStore";
 import { AuthError, loginResponse } from "../types/auth";
 import { AxiosError } from "axios";
-import { userLogin, userSignup } from "../api/auth";
+import { userLogin, userSignup } from "../api";
 import { loginSchema, LoginDto } from "backend";
 import { useState } from "react";
 import AlertBox, { MessageType } from "../components/AlertBox";

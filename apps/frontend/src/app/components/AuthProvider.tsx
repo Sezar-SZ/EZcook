@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import useStore from "@/app/hooks/useStore";
 import { useQuery } from "@tanstack/react-query";
-import { checkAuth } from "../api/auth";
+import { checkAuth } from "../api";
 import { AuthError, RefreshResponse } from "../types/auth";
 import { AxiosError } from "axios";
 

@@ -56,7 +56,7 @@ export class FoodsService {
         const result = await this.prisma.food.findMany({
             where: {
                 food_name: {
-                    search: q,
+                    search: q.split(" ").join(" & "),
                 },
             },
         });

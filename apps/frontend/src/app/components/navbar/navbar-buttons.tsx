@@ -3,7 +3,7 @@
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { Menu, X } from "react-feather";
 import useStore from "@/app/hooks/useStore";
-import { userLogout } from "@/app/api/auth";
+import { userLogout } from "@/app/api";
 import { useRouter } from "next/navigation";
 
 export default function NavButtons() {

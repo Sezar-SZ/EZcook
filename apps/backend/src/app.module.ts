@@ -10,6 +10,9 @@ import { RedisModule } from "./redis/redis.module";
 import { FoodsModule } from "./foods/foods.module";
 import Config from "./config/ConfigSchema";
 
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { join } from "path";
+
 @Module({
     imports: [
         UsersModule,
@@ -21,6 +24,11 @@ import Config from "./config/ConfigSchema";
         AuthModule,
         RedisModule,
         FoodsModule,
+        process.env.NODE_ENV === "development" &&
+            ServeStaticModule.forRoot({
+                rootPath: join(__dirname, "..", "../images"),
+                serveRoot: "/images/",
+            }),
     ],
     controllers: [AppController],
     providers: [AppService, PrismaService],
