@@ -12,6 +12,7 @@ import Config from "./config/ConfigSchema";
 
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
+import { LikesModule } from './likes/likes.module';
 
 @Module({
     imports: [
@@ -29,6 +30,7 @@ import { join } from "path";
                 rootPath: join(__dirname, "..", "../images"),
                 serveRoot: "/images/",
             }),
+        LikesModule,
     ],
     controllers: [AppController],
     providers: [AppService, PrismaService],

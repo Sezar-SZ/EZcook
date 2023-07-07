@@ -29,10 +29,9 @@ export class FoodsController {
     constructor(private readonly foodsService: FoodsService) {}
 
     @Post()
-    // @UseGuards(AccessTokenGuard)
+    @UseGuards(AccessTokenGuard)
     @UseInterceptors(FileInterceptor("food_picture"))
     @UsePipes(
-        // new ParseFormDataJsonPipe({ except: ["food_picture"] }),
         new ZodValidationPipe(createFoodSchema, { ignore: "buffer" }),
         FileInterceptor("food_picture")
     )
