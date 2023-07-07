@@ -1,6 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     transpilePackages: ["backend"],
+    images: {
+        remotePatterns: [
+            {
+                protocol:
+                    process.env.ENVIRONMENT === "development"
+                        ? "http"
+                        : "https",
+                hostname: process.env.HOSTNAME,
+            },
+        ],
+    },
 };
 
 module.exports = {
