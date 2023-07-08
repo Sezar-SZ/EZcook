@@ -7,7 +7,7 @@ const publicAxios = axios.create({
 });
 
 export async function checkAuth() {
-    const { data } = await publicAxios.get("/auth/refresh");
+    const { data } = await publicAxios.post("/auth/refresh");
     return data;
 }
 

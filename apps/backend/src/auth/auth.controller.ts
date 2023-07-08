@@ -53,7 +53,8 @@ export class AuthController {
         return this.authService.logout(request, response);
     }
 
-    @Get("refresh")
+    @Post("refresh")
+    @HttpCode(HttpStatus.OK)
     async refreshTokens(@Req() req) {
         return await this.authService.refresh(req);
     }

@@ -1,18 +1,32 @@
 # EZCook
 
-This app is built with Next.js v13 and Feathers.js
+This app is built with Next.js v13 and Nest.js
 
 ## Development FLow
+
+Create .env files for both frontend and backend:
+
+```sh
+cp ./apps/backend/.env.sample ./apps/backend/.env
+cp ./apps/frontend/.env.sample ./apps/frontend/.env
+```
 
 Run Database with docker:
 
 ```sh
-cd ./packages/db
-docker compose up
+cd ./apps/backend
+docker compose up -d
 ```
 
 Run apps parallel:
 
 ```sh
-pnpm run --parallel -r dev
+# cd to the root of the project (directory of the main `package.json`)
+pnpm dev
+```
+
+Lint:
+
+```sh
+pnpm lint:fix
 ```

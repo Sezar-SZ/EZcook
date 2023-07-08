@@ -28,13 +28,18 @@ export default function AuthProvider({
 
     return (
         <>
-            {(data || (isError && error.response?.status === 401)) && children}
+            {(data ||
+                (isError && error.response?.status === 401) ||
+                (isError && error.response?.status === 403)) &&
+                children}
             {isLoading && <div></div>}
-            {isError && error.response?.status !== 401 && (
-                <h1 className="w-screen text-left text-red-700" dir="ltr">
-                    Something Went Wrong...
-                </h1>
-            )}
+            {isError &&
+                error.response?.status !== 401 &&
+                error.response?.status !== 403 && (
+                    <h1 className="w-screen text-left text-red-700" dir="ltr">
+                        Something Went Wrong...
+                    </h1>
+                )}
         </>
     );
 }

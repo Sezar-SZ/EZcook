@@ -11,8 +11,13 @@ function refreshRequest() {
 }
 
 const usePrivateAxios = () => {
-    const accessToken = useStore((state) => state.accessToken);
     const login = useStore((state) => state.login);
+    const accessTokenArray = useStore((state) => state.accessToken);
+
+    let accessToken: null | string = null;
+
+    if (Array.isArray(accessTokenArray) && accessTokenArray.length > 0)
+        accessToken = accessTokenArray[0];
 
     const privateAxios = axios.create({
         baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -21,7 +26,8 @@ const usePrivateAxios = () => {
 
     privateAxios.interceptors.request.use(async (config) => {
         if (config.headers && accessToken)
-            config.headers["Authorization"] = `JWT ${accessToken}`;
+            config.headers["Authorization"] = `Bearer ${accessToken}`;
+
         // if (config.url && config.url.includes("/auth/"))
         //     config.withCredentials = true;
 
@@ -43,7 +49,9 @@ const usePrivateAxios = () => {
                     let modifiedConfig = {
                         ...originalConfig,
                     };
-                    modifiedConfig.headers["Authorization"] = `JWT ${newToken}`;
+                    modifiedConfig.headers[
+                        "Authorization"
+                    ] = `Bearer ${newToken}`;
                     return axios(modifiedConfig);
                 } else return Promise.reject(error);
             }
