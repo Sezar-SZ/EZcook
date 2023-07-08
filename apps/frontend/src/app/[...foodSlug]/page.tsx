@@ -4,6 +4,7 @@ import { Food } from "backend";
 import { redirect } from "next/navigation";
 import { Metadata, ResolvingMetadata } from "next/types";
 import { formatTime } from "../utils";
+import LikeButton from "../components/LikeButton";
 
 export async function generateMetadata(
     { params }: { params: { foodSlug: string[] } },
@@ -29,16 +30,19 @@ export default async function FoodPage({
 
     return (
         <div className="mx-auto mt-4 flex w-[90vw] max-w-7xl flex-col items-center justify-start bg-white p-2">
+            <div className="my-2 flex w-full justify-start md:my-0 md:mt-1">
+                {<LikeButton foodId={foodData.id} />}
+            </div>
+
             <div className="flex w-full flex-col-reverse justify-center md:flex-row">
                 <div className="mt-6 flex flex-1 flex-col items-center justify-center space-y-4 md:mt-0">
                     <h1 className="text-2xl text-red-900">
                         {foodData.food_name}
                     </h1>
-                    <h2 className="text-base text-red-800">
+                    <h2 className="text-base text-red-950">
                         زمان پخت: {formatTime(foodData.cooking_duration)}
                     </h2>
-                    <h2 className="text-base text-red-800">
-                        {" "}
+                    <h2 className="text-base text-red-950">
                         برای {foodData.serves} نفر
                     </h2>
                 </div>

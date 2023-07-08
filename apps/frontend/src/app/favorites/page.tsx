@@ -34,7 +34,11 @@ export default function FavoritesPage() {
 
     return (
         <div className="mx-auto my-5 flex w-[90vw] max-w-7xl flex-col items-center justify-start overflow-y-auto ">
-            <main className="mx-auto mt-5 flex w-full rounded bg-white p-4">
+            <main className="mx-auto mt-5 flex w-full flex-col rounded bg-white p-4">
+                <h1 className="text-center text-2xl text-primary">
+                    علاقه مندی ها
+                </h1>
+                <span className="mx-auto mt-2 h-[2px] w-3/4 rounded bg-primary"></span>
                 {isError && (
                     <div className="flex w-full justify-center">
                         <AlertBox
@@ -56,7 +60,7 @@ export default function FavoritesPage() {
                             ))}
                         </div>
                     ) : (
-                        <div className="flex w-full justify-center">
+                        <div className="mt-3 flex w-full justify-center">
                             {"موردی یافت نشد"}
                         </div>
                     ))}

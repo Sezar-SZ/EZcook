@@ -49,7 +49,9 @@ export function Buttons({
             await userLogout();
             logout();
             router.push("/");
-        } catch {}
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const buttonClicked = (href: string) => {
