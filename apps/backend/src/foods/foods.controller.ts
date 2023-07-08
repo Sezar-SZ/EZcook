@@ -67,16 +67,23 @@ export class FoodsController {
 
     @Roles(Role.ADMIN)
     @UseGuards(AccessTokenGuard, RolesGuard)
-    @Post("/review/:id")
+    @Post("/approve/:id")
     @HttpCode(HttpStatus.OK)
-    review(@Param("id") id: string) {
-        return this.foodsService.remove(+id);
+    approve(@Param("id") id: string) {
+        return this.foodsService.approve(id);
     }
 
     @Roles(Role.ADMIN)
     @UseGuards(AccessTokenGuard, RolesGuard)
     @Delete(":id")
     remove(@Param("id") id: string) {
-        return this.foodsService.remove(+id);
+        return this.foodsService.remove(id);
+    }
+
+    @Roles(Role.ADMIN)
+    @UseGuards(AccessTokenGuard, RolesGuard)
+    @Get()
+    findAll() {
+        return this.foodsService.findAll();
     }
 }

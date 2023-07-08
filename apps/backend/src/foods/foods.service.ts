@@ -58,19 +58,47 @@ export class FoodsService {
                 food_name: {
                     search: q.split(" ").join(" & "),
                 },
+                isReviewed: true,
             },
         });
         return result;
     }
 
     async findOne(id: string) {
-        // TODO: filter by `isReviewed`
-        const result = await this.prisma.food.findFirst({ where: { id } });
+        const result = await this.prisma.food.findFirst({
+            where: { id, isReviewed: true },
+        });
         if (result) return { ...result };
         throw new NotFoundException();
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} food`;
+    async approve(id: string) {
+        try {
+            await this.prisma.food.update({
+                where: { id },
+                data: { isReviewed: true },
+            });
+            return { message: "food approved successfully" };
+        } catch (error) {
+            if (error["code"] && error["code"] === "P2025")
+                return new NotFoundException();
+            return new InternalServerErrorException();
+        }
+    }
+    async remove(id: string) {
+        try {
+            await this.prisma.food.delete({
+                where: { id },
+            });
+            return { message: "food deleted successfully" };
+        } catch (error) {
+            if (error["code"] && error["code"] === "P2025")
+                return new NotFoundException();
+            return new InternalServerErrorException();
+        }
+    }
+
+    async findAll() {
+        return await this.prisma.food.findMany();
     }
 }
