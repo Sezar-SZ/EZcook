@@ -125,9 +125,7 @@ export default function AdminPage() {
                                         "border-b"
                                     }`}
                                 >
-                                    <Link
-                                        href={`/admin/${food.id}/${food.slug}`}
-                                    >
+                                    <Link href={`/${food.id}/${food.slug}`}>
                                         {food.food_name}
                                     </Link>
                                     <div className="flex items-center justify-center">

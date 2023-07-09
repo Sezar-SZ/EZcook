@@ -72,6 +72,14 @@ export class FoodsService {
         throw new NotFoundException();
     }
 
+    async findUnApprove(id: string) {
+        const result = await this.prisma.food.findFirst({
+            where: { id, isReviewed: false },
+        });
+        if (result) return { ...result };
+        throw new NotFoundException();
+    }
+
     async approve(id: string) {
         try {
             await this.prisma.food.update({

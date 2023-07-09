@@ -74,6 +74,13 @@ export class FoodsController {
 
     @Roles(Role.ADMIN)
     @UseGuards(AccessTokenGuard, RolesGuard)
+    @Get("/unapprove/:id")
+    findUnApprove(@Param("id") id: string) {
+        return this.foodsService.findUnApprove(id);
+    }
+
+    @Roles(Role.ADMIN)
+    @UseGuards(AccessTokenGuard, RolesGuard)
     @Get()
     findAll() {
         return this.foodsService.findAll();
