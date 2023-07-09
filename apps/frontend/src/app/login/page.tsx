@@ -15,8 +15,6 @@ import { loginSchema, LoginDto } from "backend";
 import { useState } from "react";
 import AlertBox, { MessageType } from "../components/AlertBox";
 
-// TODO: show loading spinner for mutations
-
 export default function Login() {
     const login = useStore((state) => state.login);
     const {
@@ -121,13 +119,15 @@ export default function Login() {
                 <div className="mx-auto flex w-1/4 flex-col justify-center space-y-4">
                     <button
                         type="submit"
-                        className="w-full rounded-md bg-primary px-1 py-2 text-white"
+                        disabled={loginMutation.isLoading}
+                        className="w-full rounded-md bg-primary px-1 py-2 text-white disabled:bg-red-500"
                     >
                         ورود
                     </button>
                     <button
                         type="button"
-                        className="w-full rounded-md bg-primary px-1 py-2 text-white"
+                        disabled={signupMutation.isLoading}
+                        className="w-full rounded-md bg-primary px-1 py-2 text-white disabled:bg-red-500"
                         onClick={handleSubmit(onSignup, errorHandler)}
                     >
                         عضویت
