@@ -6,16 +6,24 @@ services:
        extends:
         file: ./apps/backend/docker-compose.yml
         service: db
+        env_file:
+            - ./apps/backend/.env
     redis:
        extends:
         file: ./apps/backend/docker-compose.yml
         service: redis
+        env_file:
+            - ./apps/backend/.env
+
 
     backend:
         restart: always
         build:
             context: ./apps/backend/
             dockerfile: ./apps/backend/Dockerfile
+        env_file:
+            - ./apps/backend/.env
+
         volumes:
             - /code
             - ./images:/app/backend/images/
@@ -26,6 +34,9 @@ services:
 
     frontend:
         build: ./apps/frontend
+        env_file:
+            - ./apps/frontend/.env
+
         ports:
             - 3000:3000
         depends_on:
