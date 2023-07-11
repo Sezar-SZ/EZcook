@@ -1,40 +1,30 @@
 version: "3"
 
 services:
-db:
-    image: postgres:15
-    restart: always
-    env_file:
-        - ./apps/backend/.env
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-    ports:
-      - ${DB_PORT}:5432
-    volumes:
-      - ./docker-data/db:/var/lib/postgresql/data
-
+    db:
+        image: postgres:15
+        restart: unless-stopped
+        environment:
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_NAME}
+        ports:
+            - ${DB_PORT}:5432
+        volumes:
+            - ./docker-data/db:/var/lib/postgresql/data
 
     redis:
         image: redis:7
-        restart: always
-        env_file:
-            - ./apps/backend/.env
+        restart: unless-stopped
         ports:
-        - ${REDIS_PORT}:6379
+            - ${REDIS_PORT}:6379
         volumes:
-        - ./docker-data/redis:/data
-
+            - ./docker-data/redis:/data
 
     backend:
-        restart: always
+        restart: unless-stopped
         build:
-            context: ./apps/backend/
             dockerfile: ./apps/backend/Dockerfile
-        env_file:
-            - ./apps/backend/.env
-
         volumes:
             - /code
             - ./images:/app/backend/images/
@@ -45,9 +35,6 @@ db:
 
     frontend:
         build: ./apps/frontend
-        env_file:
-            - ./apps/frontend/.env
-
         ports:
             - 3000:3000
         depends_on:
