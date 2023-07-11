@@ -5,9 +5,7 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol:
-                    process.env.ENVIRONMENT === "development"
-                        ? "http"
-                        : "https",
+                    process.env.NODE_ENV === "development" ? "http" : "https",
                 hostname: process.env.HOSTNAME,
             },
         ],
