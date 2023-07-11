@@ -1,0 +1,47 @@
+version: "3"
+
+services:
+
+    db:
+       extends:
+        file: ./apps/backend/docker-compose.yml
+        service: db
+    redis:
+       extends:
+        file: ./apps/backend/docker-compose.yml
+        service: redis
+
+    backend:
+        restart: always
+        build:
+            context: ./apps/backend/
+            dockerfile: ./apps/backend/Dockerfile
+        volumes:
+            - /code
+            - ./food_pics:/app/backend/food_pics/
+        ports:
+            - "8000:8000"
+        environment:
+            - DB_NAME=${DB_NAME}
+            - DB_USER=${DB_USER}
+            - DB_PASS=${DB_PASS}
+            - SECRET_KEY=${SECRET_KEY}
+        depends_on:
+            - db
+
+    frontend:
+        build: ./apps/frontend
+        ports:
+            - 3000:3000
+        depends_on:
+            - backend
+
+    nginx:
+        build: ./nginx
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - ./images:/usr/share/nginx/food_pics:ro
+        depends_on:
+            - frontend
