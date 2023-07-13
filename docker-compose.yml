@@ -24,28 +24,20 @@ services:
     backend:
         restart: unless-stopped
         build:
+            context: .
             dockerfile: ./apps/backend/Dockerfile
         volumes:
-            - /code
-            - ./images:/app/backend/images/
+            - /var/www/html/ezcook/api/images/:/apps/backend/images/
         ports:
             - "5000:5000"
         depends_on:
             - db
 
     frontend:
-        build: ./apps/frontend
+        build:
+            context: .
+            dockerfile: ./apps/frontend/Dockerfile
         ports:
             - 3000:3000
         depends_on:
             - backend
-
-    nginx:
-        build: ./nginx
-        ports:
-            - 80:80
-            - 443:443
-        volumes:
-            - ./images:/usr/share/nginx/food_pics:ro
-        depends_on:
-            - frontend
