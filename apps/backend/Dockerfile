@@ -1,27 +1,23 @@
-###################
-# BUILD FOR LOCAL DEVELOPMENT
-###################
+FROM node:18-alpine
 
-FROM node:18
+RUN npm i -g pnpm
 
-RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
-
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY . .
 
-WORKDIR /usr/src/app/apps/backend
+RUN ls
 
-RUN pnpm install
+RUN rm -rf pnpm-lock.yaml
+
+WORKDIR /app/apps/backend
+
+RUN pnpm install --filter backend --prod
 
 RUN pnpx prisma generate
 
+RUN ls
+
 RUN pnpm build
-
-ENV NODE_ENV production
-
-RUN pnpm --filter=backend --prod deploy prune
-
-RUN pnpm install --prod
 
 CMD [ "./migrate-and-start.sh" ]

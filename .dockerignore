@@ -1,0 +1,16 @@
+/**/*/.git
+/**/*/node_modules
+/**/*/docker-compose.yml
+/**/*/Dockerfile
+/**/*/.prettierrc.cjs
+/**/*/.gitignore
+/**/*/.eslintrc.cjs
+/**/*/README.md
+/**/*/.env.sample
+
+/**/*/.next
+/**/*/next-env.d.ts
+/**/*/tsconfig.tsbuildinfo
+
+/**/*/docker-data
+/**/*/images
