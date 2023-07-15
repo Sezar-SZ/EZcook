@@ -6,17 +6,13 @@ WORKDIR /app
 
 COPY . .
 
-RUN ls
-
-RUN rm -rf pnpm-lock.yaml
-
 WORKDIR /app/apps/backend
+
+RUN pnpm add @nestjs/cli
 
 RUN pnpm install --filter backend --prod
 
 RUN pnpx prisma generate
-
-RUN ls
 
 RUN pnpm build
 

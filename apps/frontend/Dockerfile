@@ -6,8 +6,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN rm -rf pnpm-lock.yaml
-
 WORKDIR /app/apps/frontend
 
 RUN pnpm install --filter frontend --prod
