@@ -20,7 +20,7 @@ cd ./apps/backend
 docker compose up -d
 ```
 
-Run apps parallel:
+Run apps in parallel:
 
 ```sh
 # cd to the root of the project (directory of the main `package.json`)
