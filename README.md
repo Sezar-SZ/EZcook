@@ -4,6 +4,27 @@ An app that will allow users to view, submit and like food recipes.
 
 This app is built with Next.js v13 and Nest.js.
 
+## Tech Stack
+
+### Frontend
+
+* Next.js
+* Zod
+* Zustand
+* React-hook-form
+* Tailwindcss
+* axios
+
+### Backend
+
+* Nest.js
+* Prisma
+* Zod
+* Passport (JWT Auth flow)
+* Docker
+  * Postgresql
+  * Redis (to store Refresh token)
+
 ## Development FLow
 
 Create .env files for both frontend and backend:
