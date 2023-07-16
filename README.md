@@ -1,6 +1,8 @@
 # EZCook
 
-This app is built with Next.js v13 and Nest.js
+An app that will allow users to view, submit and like food recipes.
+
+This app is built with Next.js v13 and Nest.js.
 
 ## Development FLow
 
