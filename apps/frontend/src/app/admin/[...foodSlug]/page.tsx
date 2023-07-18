@@ -53,15 +53,11 @@ export default async function FoodPage() {
     useEffect(() => {
         if (id) {
             refetch();
-            console.log("doing refetch", id);
         }
     }, [id]);
 
     useEffect(() => {
-        console.log(data);
         if (data) {
-            console.log("food name", decodeURI(foodNameSlug));
-
             if (data.slug !== decodeURI(foodNameSlug))
                 redirect(`/admin/${id}/${data.slug}`);
             setImgSrc(

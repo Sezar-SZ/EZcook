@@ -60,8 +60,7 @@ export default function LikeButton({ foodId }: { foodId: string }) {
                             onClick={() => {
                                 if (
                                     !likeFood.isLoading &&
-                                    !getIfFavorite.isLoading &&
-                                    !getIfFavorite.isFetching
+                                    !getIfFavorite.isLoading
                                 )
                                     likeFood.mutate();
                             }}
